@@ -1,3 +1,8 @@
+let playerScore = 0;
+let compScore = 0;
+let playerGamesWon = 0;
+let compGamesWon = 0;
+
 
 //return a random computer choice
 function getComputerChoice() {
@@ -67,41 +72,56 @@ function round(player, comp) {
     }
 }
 
-function game() {
-    let playerChoice;
+function game(playerChoice) {
     let compChoice;
     let result;
     //initialize scores
-    let playerScore = 0;
-    let compScore = 0;
-    //play 5 rounds
-    for(let i = 0; i < 5; i++) {
-        compChoice = getComputerChoice();
-        playerChoice = prompt("Enter your choice:");
-        result = round(playerChoice, compChoice);
+    compChoice = getComputerChoice();
+    result = round(playerChoice, compChoice);
 
-        switch(result) {
-            case 0:
-                console.log("You lost...");
-                compScore += 1;
-                break;
-            case 1:
-                console.log("You drew.");
-                i--;
-                break;
-            case 2:
-                console.log("You won!");
-                playerScore += 1;
-                break;
+    switch(result) {
+        case 0:
+            compScore += 1;
+            computerScore.textContent = "Computer: " + compScore;
+            resultText.textContent = "You lost...";
+            break;
+        case 1:
+            resultText.textContent = "You drew.";
+            break;
+        case 2:
+            playerScore += 1;
+            yourScore.textContent = "You: " + playerScore;
+            resultText.textContent = "You won!";
+            break;
+    }
+    //report winner and reset game after best of 5
+    if (playerScore === 3 || compScore === 3) {
+        if(playerScore > compScore) {
+            resultText.textContent = "Congrats! You won the best of 5";
+            playerGamesWon += 1;
         }
+        else {
+            resultText.textContent = "Uh oh... You lost. Try again";
+            compGamesWon += 1;
+        }
+        playerScore = 0;
+        compScore = 0;
+        yourScore.textContent = "You: " + playerScore;
+        computerScore.textContent = "Computer: " + compScore;
     }
-    //report winner
-    if(playerScore > compScore) {
-        console.log("Congrats! You won the best of 5");
-    }
-    else {
-        console.log("Uh oh... You lost. Try again");
-    }
+    
 }
 
-game();
+
+
+const rock = document.querySelector(".rock");
+const paper = document.querySelector('.paper');
+const scissors = document.querySelector('.scissors');
+
+const yourScore = document.querySelector(".youScore");
+const computerScore = document.querySelector(".compScore");
+const resultText = document.querySelector(".result");
+
+rock.addEventListener("click", () => game("ROCK"));
+paper.addEventListener("click", () => game("PAPER"));
+scissors.addEventListener("click", () => game("SCISSORS"));
